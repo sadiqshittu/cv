@@ -1,0 +1,73 @@
+% Package for standard formatting of documents
+%
+% Author:
+% Scott Ruoti <ruoti@utk.edu>
+%
+% Notes:
+%
+% Class license:
+% MIT
+
+%-------------------------------------------------------------------------------
+%                Identification
+%-------------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{formatting}[2020/06/11 v1.0.1]
+
+%-------------------------------------------------------------------------------
+%               Common Packages
+%-------------------------------------------------------------------------------
+\RequirePackage{graphicx}
+\graphicspath{{img/}}
+
+\RequirePackage{balance}
+\RequirePackage{xspace}
+
+%-------------------------------------------------------------------------------
+%                Text Formatting
+%-------------------------------------------------------------------------------
+% Allow for proper printing of multi-lingual systems
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[english]{babel}
+
+% Better text display using microtype
+\RequirePackage{microtype}
+\microtypecontext{spacing=nonfrench}
+
+% Fix upquotes
+\RequirePackage{textcomp}
+\RequirePackage{upquote}
+
+% Allow for styling ordinals
+\RequirePackage[super]{nth}
+
+% Prevent widows
+\RequirePackage[all]{nowidow}
+
+% Avoid unnecessary hyphenation of words
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+
+%-------------------------------------------------------------------------------
+%                Figures, Tables, and Captions
+%-------------------------------------------------------------------------------
+\RequirePackage{caption}
+\RequirePackage{subcaption}
+
+\RequirePackage{tabularx}
+
+%-------------------------------------------------------------------------------
+%                Lists
+%-------------------------------------------------------------------------------
+\RequirePackage[inline]{enumitem}
+
+
+%-------------------------------------------------------------------------------
+%                URLS
+%-------------------------------------------------------------------------------
+\usepackage{url}
+
+\endinput

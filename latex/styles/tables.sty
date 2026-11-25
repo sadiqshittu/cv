@@ -1,0 +1,93 @@
+%% Start of file `tables.sty'.
+% Package for table formatting
+%
+% Author:
+% Scott Ruoti <ruoti@utk.edu>
+%
+% Notes:
+%
+% Class license:
+% MIT
+
+%-------------------------------------------------------------------------------
+%                Identification
+%-------------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tables}[2020/06/11 v1.0.1]
+
+
+%-------------------------------------------------------------------------------
+%                Packages
+%-------------------------------------------------------------------------------
+\RequirePackage{adjustbox}		% Adjust figure sizes
+\RequirePackage{array}			% More cogent setup for tables
+\RequirePackage{hhline}			% More control over horizontal lines
+\RequirePackage{multirow}		% Allow for cells that span multiple rows
+\RequirePackage[table]{xcolor}	% Color in tables
+\RequirePackage{xparse}			% Argument handling
+
+
+%-------------------------------------------------------------------------------
+%                Common table commands
+%-------------------------------------------------------------------------------
+% Rotated row header
+\newcommand*{\rowheader}[1]{\shortstack[c]{\rotatebox{90}{#1}}}
+\newcommand*{\rowmultiheader}[2]{\multirow{#1}{*}{\shortstack[c]{\rotatebox{90}{#2}}}}
+
+% Rotated column headers
+\newcommand*{\columnheader}[1]{\multicolumn{1}{c}{\adjustbox{angle=45,lap=\width-0.5em}{#1}}}
+\newcommand*{\columnhline}[1][3cm]{\adjustbox{angle=45,lap=\width-.3mm}{\rule{#1}{0.075em}}}
+
+% Simple cell allowing us to specify borders
+\newcommand*{\cell}{\multicolumn{1}}
+
+% Setup alternating color scheme. Wrapper around rowcolors that ensures the first color we give will be used first.
+% Includes default colors.
+\NewDocumentCommand{\colorcells}{O{2} O{} O{gray!10}}{
+	\ifodd #1
+		\rowcolors{#1}{#2}{#3}
+	\else
+		\rowcolors{#1}{#3}{#2}
+	\fi
+}
+
+% Cell colloring for significant values
+\newcommand{\significant}{\cellcolor{green!10}}
+
+
+
+%-------------------------------------------------------------------------------
+%                Special columns
+%-------------------------------------------------------------------------------
+\newcolumntype{\Hide}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}		% Hidden column
+\newcolumntype{H}{>{\cellcolor{white}}l}							% Header column
+
+%-------------------------------------------------------------------------------
+%                Table symbols
+%-------------------------------------------------------------------------------
+\usepackage{wasysym}
+\newcommand*{\sfull}{\CIRCLE}
+\newcommand*{\spart}{\LEFTcircle}
+\newcommand*{\snone}{\Circle}
+\newcommand*{\sna}{}
+
+\usepackage{pifont}
+\newcommand*{\sgood}{\textcolor{green!75!black}{\ding{51}}}
+\newcommand*{\sbad}{\textcolor{red!75!black}{\ding{55}}}
+
+\newcommand*{\ssupported}{\ding{51}}
+\newcommand*{\sunsupported}{\ding{55}}
+\newcommand*{\soptional}{\ding{45}}
+
+
+%-------------------------------------------------------------------------------
+%                Ratings tables
+%-------------------------------------------------------------------------------
+\newcommand*{\setupratingstable}{
+	\renewcommand{\arraystretch}{1.1}
+	\setlength{\arrayrulewidth}{0.1em}
+	\setlength\tabcolsep{3.75pt}
+	\centering
+}
+
+\endinput

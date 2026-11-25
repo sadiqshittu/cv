@@ -1,0 +1,173 @@
+%% Start of file `formatting.sty'.
+% Package for standard formatting of documents
+%
+% Author:
+% Scott Ruoti <ruoti@utk.edu>
+%
+% Notes:
+%
+% Class license:
+% MIT
+
+%-------------------------------------------------------------------------------
+%                Identification
+%-------------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{stats}[2020/06/11 v1.0.1]
+
+%-------------------------------------------------------------------------------
+%                Packages
+%-------------------------------------------------------------------------------
+\RequirePackage{listofitems}	% List handling
+\RequirePackage{pgfkeys}		% Key-value arguments
+\RequirePackage{pgfmath}		% Math calculations using pgf
+\RequirePackage{siunitx}		% Number formatting
+\RequirePackage{xfp}			% Math calculations
+\RequirePackage{xparse}			% Argument handling
+
+%-------------------------------------------------------------------------------
+%                Settings
+%-------------------------------------------------------------------------------
+\pgfkeys{stats/defaults/.cd,
+	precision/.store in=\stats@precision,
+	precision=1,
+	sample size/.store in=\stats@samplesize,
+	sample size=0,
+	alpha values/.store in=\stats@alphavalues,
+	alpha values={0.05,0.01,0.001},
+	p adjust/.store in=\stats@padjust,
+	p adjust=1,
+	p precision/.store in=\stats@pprecision,
+	p precision=2,
+}
+
+\newcommand*{\statsoptions}[1]{\pgfkeys{stats/defaults/.cd, #1}}
+
+\newcommand*{\stats@parseargs}[1]{\pgfkeys{stats/args/.cd,
+	precision/.store in=\precision,
+	precision=\stats@precision,
+	sample size/.store in=\samplesize,
+	sample size=\stats@samplesize,
+	alpha values/.store in=\alphavalues,
+	alpha values=\stats@alphavalues,
+	p adjust/.store in=\padjust,
+	p adjust=\stats@padjust,
+	p precision/.store in=\pprecision,
+	p precision=\stats@pprecision,
+	score precision/.store in=\scoreprecision,
+	#1}}
+
+
+\ExplSyntaxOn
+%-------------------------------------------------------------------------------
+%                Basic calculations
+%-------------------------------------------------------------------------------
+
+\NewDocumentCommand{\calc}{O{} m}{{
+	\stats@parseargs{#1}
+	\num[round-mode=places,round-precision=\precision,round-integer-to-decimal]{\fpeval{#2}}
+}}
+
+
+%-------------------------------------------------------------------------------
+%                Descriptive statistics
+%-------------------------------------------------------------------------------
+
+\NewDocumentCommand{\percent}{O{} m}{{
+	\stats@parseargs{#1}
+	\calc[#1]{#2 * 100 / \samplesize}\%
+}}
+
+\NewDocumentCommand{\proportion}{s O{} m}{{
+	\stats@parseargs{#2}
+	\IfBooleanTF{#1}{
+		n=#3/\samplesize;~\percent[#2]{#3}
+	}{
+		#3/\samplesize
+	}
+}}
+
+\NewDocumentCommand{\confidenceinterval}{s O{} m m}{
+	\IfBooleanTF{#1}{
+		[\calc[#2]{#3-#4},\calc[#2]{#3+#4}]
+	}{
+		\calc[#2]{#3}$\pm$\calc[#2]{#4}
+	}
+}
+
+
+%-------------------------------------------------------------------------------
+%                Comparing means
+%-------------------------------------------------------------------------------
+
+\NewDocumentCommand{\reportp}{s O{} m}{{
+	\stats@parseargs{#2}
+	
+	% Calculated adjusted probability (correction)
+	\pgfmathsetmacro{\p}{min(#3 * \padjust, 1)}
+	
+	% Read the list of alpha values
+	\setsepchar{,}
+	\readlist\alphalist{\alphavalues}
+	
+	\IfBooleanTF{#1}{
+		% Report the exact p value and the alpha value
+		$p=\calc[precision=\pprecision]{\p}$,~$\alpha=\alphalist[1]$
+	}{
+		
+		% Iterate over alpha values, reporting the most significant (i.e., last) comparison
+		\let\output\undefined
+		\foreachitem \alphavalue \in \alphalist {
+			\ifnum \fpeval{\p < \alphavalue}=1
+				\edef\output{$p<\alphavalue$}
+			\fi
+		}
+	
+		% Output results
+		\ifdefined\output
+			\output
+		\else
+			% If not significant, report the exact p value
+			$p=\calc[precision=\pprecision]{\p}$
+		\fi
+	}
+}}
+
+\NewDocumentCommand{\ttest}{s O{} m m m}{{
+	\stats@parseargs{score~precision=3,#2}
+	$t$(#3)=\calc[precision=\scoreprecision]{#4},~
+	\IfBooleanTF{#1}{
+		\reportp*[#2]{#5}
+	}{
+		\reportp[#2]{#5}
+	}
+}}
+
+\NewDocumentCommand{\anova}{s O{} m m m m}{{
+	\stats@parseargs{score~precision=3,#2}
+	$F$(#3,#4)=\calc[precision=\scoreprecision]{#5},~
+	\IfBooleanTF{#1}{
+		\reportp*[#2]{#6}
+	}{
+		\reportp[#2]{#6}
+	}
+}}
+
+
+%-------------------------------------------------------------------------------
+%                Non-parametric tests
+%-------------------------------------------------------------------------------
+
+\NewDocumentCommand{\chisq}{s O{} m m m}{{
+	\stats@parseargs{score~precision=1,#2}
+	$\chi^2$(#3)=\calc[precision=\scoreprecision]{#4},~
+	\IfBooleanTF{#1}{
+		\reportp*[#2]{#5}
+	}{
+		\reportp[#2]{#5}
+	}
+}}
+
+
+\ExplSyntaxOff
+\endinput

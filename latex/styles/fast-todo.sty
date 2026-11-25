@@ -1,0 +1,99 @@
+%% Start of file `todo.sty'.
+% Package for todo notes
+%
+% Author:
+% Scott Ruoti <ruoti@utk.edu>
+%
+% Notes:
+%
+% Class license:
+% MIT
+
+%-------------------------------------------------------------------------------
+%                Identification
+%-------------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fast-todo}[2020/06/11 v1.0.1]
+
+%-------------------------------------------------------------------------------
+%                Package options
+%-------------------------------------------------------------------------------
+
+% Add an option to turn of todo notes
+\newif\if@showtodonotes\@showtodonotestrue
+\DeclareOption{final}{
+	\@showtodonotesfalse
+}
+
+\ProcessOptions\relax
+
+%-------------------------------------------------------------------------------
+%                Setup
+%-------------------------------------------------------------------------------
+
+\if@showtodonotes
+
+\RequirePackage{xparse}
+\RequirePackage[table]{xcolor}
+
+% Counters
+\newcounter{todo@noteCounter}
+\setcounter{todo@noteCounter}{0}
+
+\newcounter{todo@todoCounter}
+\setcounter{todo@todoCounter}{0}
+
+% Colors
+\colorlet{todo@todocolor}{red!75!black}
+\colorlet{todo@notecolor}{blue!75!black}
+
+
+%-------------------------------------------------------------------------------
+%                Large notes
+%-------------------------------------------------------------------------------
+\RequirePackage{tcolorbox}
+\tcbuselibrary{breakable}
+
+\NewDocumentEnvironment{todobox}{o}{
+	\stepcounter{todo@todoCounter}
+	\begin{tcolorbox}[breakable,colback=todo@todocolor!5,colframe=todo@todocolor,title={\bfseries To-Do \#\arabic{todo@todoCounter}\IfNoValueF{#1}{ (#1)}}]
+}{
+	\end{tcolorbox}
+}
+
+\NewDocumentEnvironment{notebox}{o}{
+	\stepcounter{todo@noteCounter}
+	\begin{tcolorbox}[breakable,colback=todo@notecolor!5,colframe=todo@notecolor,coltitle=white,title={\bfseries Note \#\arabic{todo@noteCounter}\IfNoValueF{#1}{ (#1)}}]
+	}{
+	\end{tcolorbox}
+}
+
+
+%-------------------------------------------------------------------------------
+%                Inline notes
+%-------------------------------------------------------------------------------
+\usepackage[normalem]{ulem}
+
+\NewDocumentCommand{\todo}{o m}{%
+	\stepcounter{todo@todoCounter}%
+	\textcolor{todo@todocolor}{\uuline{\textbf{To-do \#\arabic{todo@todoCounter}\IfNoValueF{#1}{ (#1)}:} #2}}%
+}
+
+\NewDocumentCommand{\note}{o m}{%
+	\stepcounter{todo@noteCounter}%
+	\textcolor{todo@notecolor}{\uuline{\textbf{Note \#\arabic{todo@noteCounter}\IfNoValueF{#1}{ (#1)}:} #2}}%
+}
+
+% Report remaining todos and notes at end of document
+\AtEndDocument{
+	\ifnum \value{todo@todoCounter} > 0
+		\noindent \textcolor{todo@todocolor}{Remaining to-do items: \arabic{todo@todoCounter}}\\
+	\fi
+	\ifnum \value{todo@noteCounter} > 0
+		\noindent \textcolor{todo@notecolor}{Remaining notes: \arabic{todo@noteCounter}}
+	\fi
+}
+
+\fi
+
+\endinput
