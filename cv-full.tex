@@ -1,0 +1,25 @@
+%!TEX encoding = UTF-8 Unicode
+\makeatletter\def\input@path{{latex/classes/}{latex/styles/}}\makeatother % Set load paths
+
+\documentclass[application,cv]{cv}
+
+% TODO: Install cm-super
+
+% Support Chinese characters
+\usepackage{CJK}
+\newcommand*{\chinese}[1]{\begin{CJK}{UTF8}{gbsn}\mbox{#1}\end{CJK}}
+
+\begin{document}
+
+\maketitle
+
+\input{content/summary}
+\input{content/experience}
+\input{content/education}
+\input{content/publications}
+\input{content/service}
+
+\input{content/honors}
+\input{content/skills}
+
+\end{document}

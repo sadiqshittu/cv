@@ -1,0 +1,13 @@
+*.gz
+*.log
+*.aux
+*.out
+cv.blg
+cv.bbl
+*.blg
+*.bbl
+.DS_STORE
+/*.pdf
+*.fls
+*.fdb_latexmk
+/build/content/

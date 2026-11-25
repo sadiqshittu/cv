@@ -1,0 +1,64 @@
+%!TEX encoding = UTF-8 Unicode
+\makeatletter\def\input@path{{latex/classes/}{latex/styles/}}\makeatother % Set load paths
+
+\documentclass[letter]{cv}
+
+% Information about the application institution
+\def\university{University Name\xspace}
+\def\college{College Name\xspace}
+\def\department{Department name\xspace}
+\def\unit{department\xspace}
+\def\address{Address\xspace}
+\def\position{Position\xspace}
+
+\begin{document}
+
+\maketitle
+
+%% Letter header
+\textbf{\today}
+
+Search Committee\\
+\ifdefined \department \department \\\fi
+\ifdefined \college \college \\\fi
+\university\\
+\address\\
+
+\textbf{Dear search committee members:}
+
+
+%% Letter body
+
+I am writing in response to your advertisement for the \position position in the \department at the \university.
+I am interested in this position as the \university has consistently demonstrated itself as a leader in computer science.
+In particular, I am impressed by your DETAILS HERE.
+% strong reputation in the area of computer security.
+For these reasons, I feel that the position is an excellent fit for me.
+Moreover, due to my proven track record of research in security and privacy, my commitment to mentoring and teaching, and my desire for collaboration and interdisciplinary research, I expect that I am an excellent candidate for this position.
+
+My research focuses on authentication, IoT security, and usable encryption.
+I take an interdisciplinary approach to research that incorporates methods from fields ranging from applied cryptography to human-computer interaction.
+Based on the strength of my research and my ability to mentor students, I received the John Karat Usable Privacy and Security Research Award, which identifies future leaders in the field of usable security.
+I expect that my research will increase the breadth and depth of security expertise in your \unit and align with your \unit's hiring goals.
+Also, I expect to establish meaningful collaboration with several members of your \unit (see my research statement).
+
+I have a strong commitment to teaching and mentoring.
+At the University of Tennessee, I developed courses on applied cryptography, software security, and usable security.
+I consistently receive some of the highest student evaluations in my department, even though the projects are some of the most difficult in the major.
+Furthermore, I have substantial experience mentoring student researchers, including students from traditionally underrepresented groups.
+In my three years at the University of Tennessee, I have graduated one Ph.D. student, two MS students, and two undergraduate research assistants.
+
+Finally, I have experience running a research program and obtaining funding.
+At MIT Lincoln Laboratory, I was the PI on a program investigating Blockchain technology.
+As the PI, I was responsible for finding external funding for this program (\$1.65M) and leading a team of five research scientists.
+At the University of Tennessee, I have received funding for interdisciplinary research on security in nuclear power plants (\$800K).
+I also have multiple funding proposals under submission and in preparation.
+
+In closing, I thank you for your consideration.
+I am more than happy to answer questions regarding my application by phone or email.\\
+
+Sincerely, \\
+\includegraphics[height=2em]{content/signature}\\
+\textbf{Abubakar Sadiq Shittu}
+
+\end{document}
